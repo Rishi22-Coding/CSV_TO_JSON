@@ -1,5 +1,6 @@
 import json
 import csv
+from numpy import true_divide
 import pandas
 path = 'data.csv'
 data = pandas.read_csv(path, index_col=0)
@@ -16,6 +17,7 @@ def parametersData(parameter):
                 "Low Range": parameter["Low Range"] if parameter["Low Range"]!="NaN" else 'NULL',
                 "High Range": parameter["High Range"] if parameter["High Range"]!="NaN" else 'NULL'
     }
+
 
 for indx, row in data.iterrows():
     # print("Index:-", indx)
@@ -40,7 +42,13 @@ for indx, row in data.iterrows():
                 })
                 break
             else:
-                panel["Parameters"].append(parametersData(row))
+                is_panel_code_parameter_code_unique=True
+                for parameter in panel["Parameters"]:
+                    if parameter.get("Parameter Code")==row["Parameter Code"]:
+                        is_panel_code_parameter_code_unique=False
+                        break
+                if is_panel_code_parameter_code_unique:
+                    panel["Parameters"].append(parametersData(row))
     # print(row)
     # if row["Parameter Code"]==29322:
     #     break
